@@ -4,7 +4,7 @@ spring:
   application:
     name: account
   datasource:
-    name: orderingsystem
+    name: deliversystem
     url: jdbc:mysql://localhost:3306/deliversystem?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: 123456
