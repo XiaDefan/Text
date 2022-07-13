@@ -4,10 +4,10 @@ spring:
   application:
     name: menu
   datasource:
-    name: orderingsystem
-    url: jdbc:mysql://localhost:3306/orderingsystem?useUnicode=true&characterEncoding=UTF-8
+    name: deliversystem
+    url: jdbc:mysql://localhost:3306/deliversystem?useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: root
+    password: 123456
 eureka:
   client:
     service-url:
@@ -16,4 +16,4 @@ eureka:
     prefer-ip-address: true
 mybatis:
   mapper-locations: classpath:mapping/*.xml
-  type-aliases-package: com.southwind.entity
+  type-aliases-package: com.summer.entity
