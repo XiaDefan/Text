@@ -3,9 +3,6 @@ server:
 spring:
   application:
     name: clientfeign
-  thymeleaf:
-    prefix: classpath:/static/
-    suffix: .html
 eureka:
   client:
     service-url:
