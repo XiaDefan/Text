@@ -1,19 +1,43 @@
 server:
-  port: 8050
+  port: 9904 #服务端口号
 spring:
   application:
-    name: user
+    name: user  #微服务名称，对外暴漏的微服务名称，十分重要
+  ################################################## JDBC 通用配置  ##########################################
   datasource:
-    name: deliversystem
-    url: jdbc:mysql://localhost:3306/deliversystem?useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: 123456
+    username: root        #数据库登陆用户名
+    password: root        #数据库登陆密码
+    url: jdbc:mysql://localhost:3306/deliversystem?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=utf8       #数据库url
+    driver-class-name: com.mysql.cj.jdbc.Driver              #数据库驱动
+    type: com.alibaba.druid.pool.DruidDataSource
+############################### 不检查 spring.config.import=configserver:##################
+#  cloud:
+#    config:
+#      enabled: false
+###################################### MyBatisPlus 配置 ######################################
+# 在application.yml 中增加配置，指定 mapper 文件所在的包，进入DEBUG模式
+#logging:
+#  level:
+#    com.baomidou.example.mapper: debug
+
+#  configuration:
+#    #默认开启驼峰命名法，可以不用设置该属性
+#    map-underscore-to-camel-case: true
+########################################### Spring cloud 自定义服务名称和 ip 地址###############################################
 eureka:
-  client:
+  client: #将客户端注册到 eureka 服务列表内
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:9900/eureka/  #这个地址是 7001注册中心在 application.yml 中暴露出来额注册地址 （单机版）
   instance:
-    prefer-ip-address: true
-mybatis:
-  mapper-locations: classpath:mapping/*.xml
-  type-aliases-package: com.summer.entity
+    instance-id: user-9904 #自定义服务名称信息
+    prefer-ip-address: true  #显示访问路径的 ip 地址
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.commons.JakartaCommonsLoggingImpl
+  global-config:
+    db-config:
+      table-prefix: t_
+      id-type: auto
+  type-enums-package: com.summer.utils
