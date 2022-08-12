@@ -1,11 +1,100 @@
 server:
-  port: 8030
+  port: 9903 #服务端口号
 spring:
   application:
-    name: clientfeign
+    name: feign  #微服务名称，对外暴漏的微服务名称，十分重要
+  mail:
+    host: smtp.163.com
+    username: XiaDefan123@163.com # Email address for sending emails
+    password: SUSBQTTMWZPQKSRJ # Client authorization code
+    properties.mail.smtp.port: 994
+    from: XiaDefan123@163.com
+    nikename: DeliverSystem
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+# 服务启动时加载
+
+
+
+
+
+############################### 不检查 spring.config.import=configserver:##################
+  cloud:
+    config:
+      enabled: false
+  redis:
+    host: localhost
+    password:
+    port: 6379
+    # 连接超时时间（毫秒）
+    timeout: 1000
+
+
+########################################### Spring cloud 自定义服务名称和 ip 地址###############################################
 eureka:
-  client:
+  client: #将客户端注册到 eureka 服务列表内
     service-url:
-      defaultZone: http://localhost:9900/eureka/
+      defaultZone: http://localhost:9900/eureka/  #这个地址是 7001注册中心在 application.yml 中暴露出来额注册地址 （单机版）
   instance:
-    prefer-ip-address: true
+    instance-id: client-9903 #自定义服务名称信息
+    prefer-ip-address: true  #显示访问路径的 ip 地址
+#logging:
+#  level:
+#    com:
+#      onlineBookStore:
+#        project:
+#          mapper: debug
+
+
+#  超时配置 , 默认是请求接口一秒未有响应则超时失效,这里演示改为5秒
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 50000
+
+
+#ribbon:
+#  OkToRetryOnAllOperations: false #对所有操作请求都进行重试,默认false
+#  ReadTimeout: 60000   #负载均衡超时时间，默认值5000
+#  ConnectTimeout: 3000 #ribbon请求连接的超时时间，默认值2000
+#  MaxAutoRetries: 0     #对当前实例的重试次数，默认0
+#  MaxAutoRetriesNextServer: 1 #对切换实例的重试次数，默认1
+#
+#hystrix:
+#  command:
+#    default:  #default全局有效，service id指定应用有效
+#      execution:
+#        timeout:
+#          #如果enabled设置为false，则请求超时交给ribbon控制,为true,则超时作为熔断根据
+#          enabled: true
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 70000 #断路器超时时间，默认1000ms
+
+
+
+
+
+
+# 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号，在沙箱应用中获取
+appId: 2021000121613793
+# 商户私钥，您的PKCS8格式RSA2私钥，通过开发助手生成的应用私钥
+privateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC1rYiWchL7GoV76ROMqJTIzKCJuOq9M23hd4P9kMPcuP5jCeR80ns+kkg/YleqKUW3/FdRe0tm3OADYVJqqzMIeVV5RqSdx6ULXZ4WqwjU96FskCLKJxC2ETrEvJPV+Sz4M/41041Ni7vI7/k61aUuInzMDuXEZPvr+F/eJF3a28eUKAryWi8/FUx473smibvX39F71S8lAV2XPYfnrhL0ZcOBUVZWDOSCc4phxu0DWgnxuJNPrPgaFjzMQRZW7K3ef2kb8yPk/b/9qvY4BHhvhqHiKzY/L70+4Ou+lCD9OKZYzXwQymbyI213Qc75L8OZ/IBw6jgvss1vSiXoIWLTAgMBAAECggEAOD5196VvLN/EDV1V2QjjrtpypNBjk5lVXiTC7wAfMrjuwDhyzRXYY8GjrkPCwgIu/EuZuLcD299rVoCNpEpF7Uyq4nW1Rsdk2ATuiTP/8vaKufJRYuX/LW5eFEQRPH/8pQZrn7xTlXs58nYgYU986LBylDXUeh2NRDtLapk1mShFVv3NqyP4dExbXiGiFHJRIlxsuk+wq5YMneoKSFXCyE1dzzhrWyIP4mVqFvhZwF01dtLdHpOfPdk9Om/oW9/wvBbJAbbZD2M/vTcu9nx/w0gh2ypa44vaE3Q4Q3LzuQBMZpLoPPdvssnI8u/zgGEbZhrEAymZq3ujf7wUVGv3iQKBgQDoL+1xs3Gjzf75XbIERcAxdoombarR9Dt1pve4NLnn1jpqBSb6tvrfAMFcdVzfAITugD3Ciz4cnOdejG50E2qdPAG1ryoqGDp/0Lo86vh0qb1I0W1sO/M9tw8K9iEoAG1HILI4TGxx8sivsGOVJkp0Sy9Fq8gM/7cBmLZdGfWMXQKBgQDIT3vPoO1RvNvVU8emhXsTlsA18QAyLGK6gLYoF/7d4l9Oxx/KJS2qp1FyN9ZRYWPKP4WxUYotS8qbbiDAn+QSRk/16e3SfinOOC8D2bC5BAFuhjjMUqr4fgmTd1CTHOszhpjgRALzMLiocZ/TcJisPzd+gKzDaytQi9KoTvs47wKBgQDW4HwDTMkvihWc26xCrfaHECgcFkQPF9LrOAFrNUiTGLxon6oKPsr/FGjeUzMGoilju8TsRQbPXhn1c0tJGysApqcCaEBCQrfoz9d7Rw12khu9xytYDkc25zIBt/TJW1PGjqjA12FJNyGpDjmqr4waAfaWqLpz5TeNP7INiVeodQKBgFoVLMgORkwJFBAXEmV4CAaiOCTKEl1+CpR3R/Q1/l+I63XBJTHCkIv7nSwxokeM9dTBxn0c/3gpap+F4mLeRTJWvqUII/US2fgs2i/wGYLLI12yLR7uWodQHzxbXzgZvEi60kuhKnZ1xcWy+76aF373Gxzf/1IPAzbA+ubIRkCvAoGBAL6MyGgt26H2pTGY0YHVMVuzpuyrne7nXDm+z8x1GyeIrgoKRv23kdErqBd/XnrL1Q0PyXpSzRlN45ecI4OXaZ5GAsP2m5788/loOTzKcCDIApiK5eIvsrm280yv/UyXi+4xYvAILL1eb10FUX7jQflSrMH8Hiv7OR4oKsK3Ps0l
+# 支付宝公钥,在沙箱应用获取，通过应用公钥生成支付宝公钥
+publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnlbYXUgzAjCsRudA37jmosWzaF1jlQXoiYuGyW6a1pAZwRWTjU0Xf6p2uR5afr0w3gMT73V6YSjil/p8Ff/bOa4OTljHhQJPKFdzJ4Ew2XY64tGYllpKJqUl+cmlp7fz68ZFQOORcUf3S+nRkhhvhDRVT895bphU1VcHbC+sHk8SDsl3DJVyQSFm1mUVVCS+y3ldGXmKPr+sTCFQdweIto1MwuH/2WDHMvtRbkNQMtdeDA7qFa5lWDUrqy1k6ozFIfCHwYwQVgAXvVZE9kybJWGhH9CPJhdhr/0umsWDANtPCL6c7gtSFXa6You4xYWHG2hOmFX8Wfc9O5lChIcouwIDAQAB
+
+notifyUrl: http://localhost:9903/alipay/success
+# 页面跳转同步通知页面路径
+returnUrl: http://localhost:9903/alipay/success
+# 签名方式
+signType: RSA2
+# 字符编码格式
+charset: utf-8
+# 支付宝网关，在沙箱应用中获取
+gatewayUrl: https://openapi.alipaydev.com/gateway.do
+
+
